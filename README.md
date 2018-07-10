@@ -7,7 +7,7 @@ ISF stands for "Interactive Shader Format", and is a file format that describes 
 #### Downloads
 
 - An ISF editor and test app is available here: 
-[ISF Editor.app.zip](http://www.vidvox.net/rays_oddsnends/ISF%20Editor_2.9.3.zip).  These are some of its basic features:
+[ISF_Editor_2.9.7.3.dmg](https://www.vidvox.net/download/ISF_Editor_2.9.7.3.dmg).  These are some of its basic features:
   - Browses, renders and displays ISF files. Has a built-in video source, and can also use any QC comps, movie files, image files, Syphon video servers, or AVCapture-compatible video inputs as a video source for testing ISF-based image filters.
   - Automatically publishes the rendered output as a Syphon source
   - Can render ISF files to movie files, with optional anti-aliasing
@@ -19,8 +19,8 @@ ISF stands for "Interactive Shader Format", and is a file format that describes 
 #### Sample Files
 
 - Here are a bunch of simple test ISF files that demonstrate ISF's basic features (these are test filters, and we don't expect them to have signifcant creative use):
-[ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
-- [Here's an installer](http://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
+[ISF Test/Tutorial filters](https://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
+- [Here's an installer](https://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
 
 
 #### Source Code
@@ -59,7 +59,7 @@ When you load an ISF file, the shader code in your file is modified in memory du
 ```
 
 - `IMG_PIXEL()` and `IMG_NORM_PIXEL()` fetch the color of a pixel in an image using either pixel-based coords or normalized coords, respectively, and should be used *instead of* `texture2D()` or `texture2DRect()`. In both functions, "imageName" refers to the variable name of the image you want to work with. This image can come from a variety of sources- an "image"-type input, the target of a previous render pass or a persistent buffer, an imported image, etc: all of these sources of images have a name value associated with them, and this name is what you pass to these functions. For several examples, please check out this .zip of extremely simple shaders that demonstrate the features of ISF, one at a time:
-[ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
+[ISF Test/Tutorial filters](https://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
 - `IMG_SIZE()` returns a two-element vector describing the size of the image in pixels.
 
 #### Multiple Rendering Passes, Rendering to Buffers
@@ -78,7 +78,7 @@ ISF files can define persistent buffers. These buffers are images (GL textures) 
 # The ISF Specification vsn 2.0
 
 First of all, there are super-simple examples that cover all of this- check out the various "Test____.fs" sample filters located here:
-[ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
+[ISF Test/Tutorial filters](https://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
 ...you will probably learn more, faster, from the examples than you'll get by reading this document: each example describes a single aspect of the ISF file format, and they're extremely handy for testing, reference, or as a tutorial (the ISF file format is very small).
 
 - The first thing in your ISF file needs to be a comment (delineated using "/\*" and "\*/") containing a JSON dict. If the comment doesn't exist- or the JSON dict is malformed or can't be parsed- your ISF file can't be loaded (ISF files can be tested with the ISF Editor linked to elsewhere on this page). This JSON dict is referred to as your "top-level dict" throughout the rest of this document.
@@ -123,7 +123,7 @@ First of all, there are super-simple examples that cover all of this- check out 
 
 # Differences from the first version of the ISF spec
 
-The first version of the ISF spec did some confusing and silly things that the second version improves on.  If you want to write your own ISF host, and you want that host to support "old" ISF files, here's a link to [the original ISF spec.](http://www.vidvox.net/rays_oddsnends/ISF_v1.md)
+The first version of the ISF spec did some confusing and silly things that the second version improves on.  If you want to write your own ISF host, and you want that host to support "old" ISF files, here's a link to [the original ISF spec.](https://www.vidvox.net/rays_oddsnends/ISF_v1.md)
 
 ...and here's a list of the specific changes that were made from ISFVSN 1 to ISFVSN 2:
 
