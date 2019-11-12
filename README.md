@@ -7,9 +7,9 @@ ISF stands for "Interactive Shader Format", and is a file format that describes 
 #### Downloads
 
 - An ISF editor and test app is available here: 
-[ISF_Editor_2.9.7.3.dmg](https://www.vidvox.net/download/ISF_Editor_2.9.7.3.dmg).  These are some of its basic features:
-  - Browses, renders and displays ISF files. Has a built-in video source, and can also use any QC comps, movie files, image files, Syphon video servers, or AVCapture-compatible video inputs as a video source for testing ISF-based image filters.
-  - Automatically publishes the rendered output as a Syphon source
+[ISF_Editor (Mac + Win)](https://isf.vidvox.net/desktop-editor/).  These are some of its basic features:
+  - Browses, renders and displays ISF files. Has a built-in video source, Syphon / Spout video servers, or AVCapture-compatible video inputs as a video source for testing ISF-based image filters and transitions.
+  - Automatically publishes the rendered output as a Syphon / Spout server
   - Can render ISF files to movie files, with optional anti-aliasing
   - UI items are automatically created for inputs, allowing you to interact with your ISF file
   - Built-in shader editor with syntax coloring and integrated error display along with plenty of logging to facilitate creating and debugging shaders.
@@ -20,16 +20,21 @@ ISF stands for "Interactive Shader Format", and is a file format that describes 
 
 - Here are a bunch of simple test ISF files that demonstrate ISF's basic features (these are test filters, and we don't expect them to have signifcant creative use):
 [ISF Test/Tutorial filters](https://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
-- [Here's an installer](https://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
+- [ISF Files repository](https://github.com/vidvox/ISF-FILES) contains over two hundred different ISF files, including many standard generators, filters and transitions.
 
 
 #### Source Code
 
-- I've made the ISF implementation I wrote for VDMX and the ISF Editor app freely available as VVISFKit.framework in my open-source repos here: [github.com/mrRay/vvopensource](https://www.github.com/mrRay/vvopensource).
-- A friend linked me to an OpenFrameworks-based ISF loader here: [github.com/satoruhiga/ofxISF](https://www.github.com/satoruhiga/ofxISF)
-- There's a [https://www.interactiveshaderformat.com](WebGL-based ISF website)! The code for this website (written by Michael Feldstein) is also open-source and is freely available here: [github.com/msfeldstein/ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer).
+- The [ISF c++ implementation](https://github.com/mrRay/VVISF-GL) is currently recommended for development on Mac and Windows.  This includes the currrent development for the ISF Editor app.
+- The Objective-C ISF implementation I wrote for VDMX and the original ISF Editor app freely available as VVISFKit.framework in my open-source repos here: [github.com/mrRay/vvopensource](https://www.github.com/mrRay/vvopensource).
+- The [https://www.interactiveshaderformat.com](WebGL-based ISF website) uses the open-source [github.com/msfeldstein/ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer) written by Michael Feldstein.
+
+#### Supported Software
+
+For a listing of software and frameworks that support the ISF specification visit the [integrations](https://isf.video/integrations/) page on the ISF website.
 
 ## Spec Overview:
+
 Functionally, you are limited only to what you can accomplish in a GLSL program (vertex + fragment shader, but the frag shader is where most of the action happens in most of the ISF files we've seen so far).
 
 ISF's defining characteristic is the JSON dict at the beginning of your shader which describes it.  This JSON dict contains the information describing how to interact with your shader- all the inputs, how many rendering passes there are and how to render them, etc.  As a result of this, ISF is a very loose, open-ended file format: it can easily be extended by recognizing more keys in the future if we think of new things that might be nice to have.
