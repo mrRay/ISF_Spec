@@ -2,5 +2,8 @@
 	"type": "module",
 	"scripts": {
 		"build": "node BUILD.js"
+	},
+	"dependencies": {
+		"ajv": "^8.10.0"
 	}
 }

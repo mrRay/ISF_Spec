@@ -1,6 +1,7 @@
 export const PASS = {
 	type: 'object',
 	description: 'Declaration of each render pass',
+	required: ['TARGET'],
 	properties: {
 		TARGET: {
 			type: 'string',
@@ -11,12 +12,12 @@ export const PASS = {
 			description: 'Description of what the shader pass is used for'
 		},
 		WIDTH: {
-			type: 'string|integer',
+			type: ['string','integer'],
 			default: '$WIDTH',
 			description: 'Width of render pass as an integer or GLSL function, ie. floor($WIDTH/2.0)'
 		},
 		HEIGHT: {
-			type: 'string|integer',
+			type: ['string','integer'],
 			default: '$HEIGHT',
 			description: 'Height of render pass as an integer or GLSL function, ie. floor($HEIGHT/2.0)'
 		},
@@ -33,11 +34,26 @@ export const PASS = {
 	}
 }
 
+export const LOCKED_TYPES = [ 'event', 'image', 'audio', 'audioFFT']
+export const SETTABLE_TYPES = [ 'bool' ]
+export const MINMAX_TYPES = [ 'long', 'float', 'point2D', 'color' ]
+
+export const INPUT_TYPES = {
+	event: 'bool',
+	bool: 'bool',
+	long: 'int',
+	float: 'float',
+	point2D: 'vec2',
+	color: 'vec4',
+	image: 'texture2D',
+	audio: 'texture2D',
+	audioFFT: 'texture2D'
+}
 
 export const INPUT = {
 	type: 'object',
 	description: 'Declaration of each GUI uniform',
-	uniqueItems: true,
+	required:  ['NAME', 'TYPE'],
 	properties: {
 		NAME: {
 			type: 'string',
@@ -45,20 +61,24 @@ export const INPUT = {
 		},
 		TYPE: {
 			type: 'string',
-			description: 'GUI and variable type, where: event=bool, bool=bool, long=int|long, float=float, point2D=vec2, color=vec4, image=texture2D, audio=texture2D, audioFFT=texture2D',
-			oneOf: ['event', 'bool', 'long', 'float', 'point2D', 'color', 'image', 'audio', 'audioFFT']
+			description: 'GUI and variable type, see list in IMPLEMENTATION.md',
+			enum: [...SETTABLE_TYPES,...LOCKED_TYPES,...MINMAX_TYPES]
 		},
 		DEFAULT: {
-			type: 'bool|number|array',
-			description: 'Default value for the parameter, where: '
+			type: ['boolean','number','array'],
+			description: `Default value for the parameter, applicable to only: ${[...SETTABLE_TYPES, ...MINMAX_TYPES]}`
 		},
 		MIN: {
-			type: 'number|array',
-			description: 'Same format as DEFAULT'
+			type: ['number','array'],
+			description: `Same format as DEFAULT, applicable to only: ${[...MINMAX_TYPES]}`
 		},
 		MAX: {
-			type: 'number|array',
-			description: 'Same format as DEFAULT'
+			type: ['number','array'],
+			description: `Same format as DEFAULT, applicable to only: ${[...MINMAX_TYPES]}`
+		},
+		LABEL: {
+			type: 'string',
+			description: 'Visual label of GUI input'
 		},
 		LABELS: {
 			type: 'array',
@@ -73,113 +93,55 @@ export const INPUT = {
 }
 
 export const SCHEMA = {
-	CATEGORIES: {
-		type: 'array',
-		description: 'Descriptive category tags',
-		items: {
-			type: 'string',
-			examples: [ '3d', 'mask' ]
-		}
-	},
-	CREDIT: {
-		type: 'string',
-		description: 'Name of creator'
-	},
-	ISFVSN: {
-		type: 'integer',
-		description: 'ISF specification version',
-		default: 1,
-		oneOf: [1,2]
-	},
-	INPUTS: {
-		type: 'array',
-		default: [],
-		description: 'Declaration of GUI uniforms',
-		items: INPUT
-	},
-	PASSES: {
-		type: 'array',
-		description: 'Declaration of names and amount of buffer render passes',
-		uniqueItems: true,
-		maxItems: 16,
-		items: PASS
-	},
-	IMPORTED: {
-		type: 'object',
-		patternProperties: {
-			'^': {
-				type: 'object',
-				description: 'Arbitrary key is name of imported image inside shader code',
-				properties: {
-					PATH: {
-						type: 'string',
-						description: 'Local path to image file'
-					}
-				}
-			} 
+	type: 'object',
+	required: ['INPUTS'],
+	properties: {
+		CATEGORIES: {
+			type: 'array',
+			description: 'Descriptive category tags',
+			items: {
+				type: 'string',
+				examples: [ '3d', 'mask' ]
+			}
 		},
-		additionalProperties: false
+		CREDIT: {
+			type: 'string',
+			description: 'Name of creator'
+		},
+		ISFVSN: {
+			type: 'number',
+			description: 'ISF specification version (max is 2.99 until V3 exists)',
+			default: 1,
+			maximum: 2.99
+		},
+		INPUTS: {
+			type: 'array',
+			default: [],
+			description: 'Declaration of GUI uniforms',
+			items: INPUT
+		},
+		PASSES: {
+			type: 'array',
+			description: 'Declaration of names and amount of buffer render passes',
+			uniqueItems: true,
+			maxItems: 16,
+			items: PASS
+		},
+		IMPORTED: {
+			type: 'object',
+			patternProperties: {
+				'^': {
+					type: 'object',
+					description: 'Arbitrary key is name of imported image inside shader code',
+					properties: {
+						PATH: {
+							type: 'string',
+							description: 'Local path to image file'
+						}
+					}
+				} 
+			},
+			additionalProperties: false
+		}
 	}
 }
-
-
-export const FUNCTIONS = [
-	{
-		name: 'IMG_SIZE( texture2D )',
-		is: 'vec2',
-		description: 'Returns width and height of image'
-	},
-	{
-		name: 'IMG_NORM_PIXEL( texture2D )',
-		is: 'vec2',
-		description: 'Returns normalised fragment coordinate of image[0,0] to [1,1]'
-	},
-	{
-		name: 'IMG_PIXEL( texture2D )',
-		is: 'vec2',
-		description: 'Returns fragment coordinate of image[0,0] to [$WIDTH,$HEIGHT]'
-	}
-]
-
-export const UNIFORMS = [
-	{
-		name: 'gl_FragCoord',
-		is: 'vec2',
-		description: 'Current fragment coordinate [0,0] to [$WIDTH,$HEIGHT]'
-	},
-	{
-		name: 'isf_FragNormCoord',
-		is: 'vec2',
-		description: 'Current normalised fragment coordinate [0,0] to [1,1]'
-	},
-	{
-		name: 'PASSINDEX',
-		is: 'int',
-		description: 'Current pass index, in order of PASSES array'
-	},
-	{
-		name: 'RENDERSIZE',
-		is: 'vec2',
-		description: 'Current width and height of rendering pass'
-	},
-	{
-		name: 'TIME',
-		is: 'float',
-		description: 'Current time in seconds'
-	},
-	{
-		name: 'TIMEDELTA',
-		is: 'float',
-		description: 'Current time elapsed since last frame was rendered'
-	},
-	{
-		name: 'DATE',
-		is: 'vec4',
-		description: 'Current date as [ $YEAR, $MONTH, $DAY, $TIME ]'
-	},
-	{
-		name: 'FRAMEINDEX',
-		is: 'int',
-		description: 'Counter for each frame rendered'
-	}
-]

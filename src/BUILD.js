@@ -1,32 +1,36 @@
 import fs from 'fs'
-import { SCHEMA, UNIFORMS, FUNCTIONS } from './SCHEMA.js'
+import Ajv from 'ajv'
+import DUMMY from './DUMMY.js'
+import { SCHEMA } from './SCHEMA.js'
+
 
 const parse = o => {
 	return `${o.is} ${o.name}\n// ${o.description}`
 }
 
 const run = async e => {
-	await fs.writeFileSync('../SCHEMA.json', JSON.stringify(SCHEMA, null, '\t'))
 
-	const def = {
-		SCHEMA: JSON.stringify(SCHEMA,null,'\t'),
-		UNIFORMS: UNIFORMS.map( parse ).join('\n'),
-		FUNCTIONS: FUNCTIONS.map( parse ).join('\n')
+	const ajv = new Ajv( { allErrors: true, useDefaults: true, allowUnionTypes: true } )
+
+	try {
+		const validate = ajv.compile(SCHEMA)
+		const valid = validate(JSON.parse(DUMMY))
+		if (validate?.errors) console.error('❌', validate.errors)
+		if (!validate?.errors) console.log('no errors ✅')
+		const str = JSON.stringify(SCHEMA, null, '\t')
+		await fs.writeFileSync('../SCHEMA.json', str)
+		console.log('wrote schema json ✅')
+		let template = {}
+		validate(template)
+		await fs.writeFileSync('../SCHEMA.template.json', JSON.stringify(template, null, '\t'))
+		console.log('wrote template json ✅')
+
+	} catch(err) {
+		err.message.split(', ').forEach( line => {
+			console.log('❌', line)
+		})
 	}
-	const lang = {
-		SCHEMA: 'json',
-		UNIFORMS: 'glsl',
-		FUNCTIONS: 'glsl'
-	}
 
-	let DOC = ''
-	for (const [k,v] of Object.entries(def)) {
-		DOC += `# ${k} \n\`\`\`${lang[k]}\n${v}\n\`\`\`\`\n`
-	}
-
-	await fs.writeFileSync('../SCHEMA.md', DOC)
-
-	console.log('wrote SCHEMA.json and SCHEMA.md ✅')
 }
 
 run()
