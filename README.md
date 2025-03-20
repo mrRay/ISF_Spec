@@ -25,8 +25,9 @@ ISF stands for "Interactive Shader Format", and is a file format that describes 
 
 #### Source Code
 
-- The [ISF c++ implementation](https://github.com/mrRay/VVISF-GL) is currently recommended for development on Mac and Windows.  This includes the currrent development for the ISF Editor app.
-- The Objective-C ISF implementation I wrote for VDMX and the original ISF Editor app freely available as VVISFKit.framework in my open-source repos here: [github.com/mrRay/vvopensource](https://www.github.com/mrRay/vvopensource).
+- The latest development is an [Objective-C/Metal ISF implementation](https://github.com/mrRay/ISFMSLKit) I wrote for VDMX6 freely available as ISFMSLKit.framework.  This doesn't use OpenGL at all- instead, ISF shaders are transpiled to run natively in Metal.  The vast majority of ISF shaders we've tested (>99%) work without modification with this lib.
+- The [cross-platform ISF c++ implementation](https://github.com/mrRay/VVISF-GL) is currently recommended for development on Mac and Windows using OpenGL.  This includes the currrent development for the ISF Editor app.
+- There's a legacy Objective-C/OpenGL ISF implementation I wrote for VDMX5 and the original ISF Editor app freely available as VVISFKit.framework in my open-source repos here: [github.com/mrRay/vvopensource](https://www.github.com/mrRay/vvopensource).
 - The [https://www.interactiveshaderformat.com](WebGL-based ISF website) uses the open-source [github.com/msfeldstein/ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer) written by Michael Feldstein.
 
 #### Supported Software
